@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
 const Header = () => {
     return (
         <div className="navbar bg-base-100">
@@ -18,10 +19,10 @@ const Header = () => {
                 </div>
                 <Link to='/login' className="btn btn-ghost normal-case text-xl">Nexis</Link>
             </div>
-            <div className="navbar-center hidden lg:flex">
+            <div className="navbar-end hidden lg:flex">
                 <ul className="menu menu-horizontal p-0">
                 <li><Link to='/login'>Login</Link></li>
-                <li><Link to='/register'>Register</Link></li>
+                <li className='register'><Link to='/register'>Register</Link></li>
                   
                 </ul>
             </div>
