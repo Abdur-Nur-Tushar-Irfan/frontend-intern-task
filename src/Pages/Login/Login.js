@@ -1,28 +1,32 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import login1 from'../../assets/login1.webp'
+import { AuthContext } from '../Context/UserContext';
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loginError, setloginError] = useState('')
-    const handleRegister = (data) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/'
+    const { signIn } = useContext(AuthContext)
 
-        createUser(data.email, data.password)
+
+    const handleLogin = (data) => {
+        signIn(data.email, data.password)
             .then(result => {
                 const user = result.user
                 console.log(user)
-                toast.success('successfully register')
-                saveUser(data.name,data.email,data.role)
-                handleUpdateUserProfile(data.name, data.photoURL)
-
+                setloginError('')
+                
             })
             .catch(error => {
                 console.error(error)
-                setRegisterError(error.message)
+                setloginError(error.message)
             })
-
     }
+    
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row">
@@ -30,7 +34,7 @@ const Login = () => {
 
                 <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100 p-3">
                     <h1 className="text-3xl font-bold text-center">Login now!</h1>
-                    <form onSubmit={handleSubmit} className="card-body">
+                    <form onSubmit={handleSubmit(handleLogin)} className="card-body">
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Email</span>
@@ -42,9 +46,9 @@ const Login = () => {
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input type="password" {...register("password", { required: true, minLength: { value: 8, message: 'Password must be 8 character' } })} placeholder="password" className="input input-bordered" />
+                            <input type="password" {...register("password", { required: 'password is required', minLength: { value: 8, message: 'Password must be 8 character' } })} placeholder="password" className="input input-bordered" />
                             <label className="label">
-                                {errors.email?.type === 'required' && <p className='text-red-700 mt-2'>Password is required</p>}
+                            {errors.password  && <p className='text-red-600 mt-2'>{errors.password?.message}</p>}
 
                             </label>
                             <p className='text-red-600'>{loginError}</p>
