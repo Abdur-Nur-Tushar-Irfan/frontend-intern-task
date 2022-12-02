@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import logo from '../../assets/ultimatelogo.PNG'
 
 const Header = () => {
     return (
@@ -19,7 +19,7 @@ const Header = () => {
 
                     </ul>
                 </div>
-                <Link to='/login' className="btn btn-ghost normal-case text-xl">Nexis</Link>
+                <Link to='/login' className="btn btn-ghost normal-case text-xl"><img src={logo} alt='ultimate'/></Link>
             </div>
             <div className="navbar-end hidden lg:flex">
                 <ul className="menu menu-horizontal p-0">

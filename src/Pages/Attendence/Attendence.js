@@ -4,12 +4,14 @@ import React from 'react';
 const Attendence = () => {
     const { data: users = [] } = useQuery({
         queryKey: ['users'],
-        queryFn: () => fetch('http://localhost:5000/users')
+        queryFn: () => fetch('http://localhost:5000/users',{
+            authorization:`bearer ${localStorage.getItem('accessToken')}`
+        })
             .then(res => res.json())
     })
     return (
         <div className="overflow-x-auto">
-            <h1 className='text-3xl font-bold'>Attendence Table</h1>
+            <h1 className='text-5xl font-bold'>Attendence Table</h1>
             <table className="table w-full">
            
                 <thead>
@@ -22,7 +24,7 @@ const Attendence = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
+                    {   users?.length>0 &&
                         users?.map((user,i)=> <tr>
                             <th>{i+1}</th>
                             <td>{user.firstName}</td>

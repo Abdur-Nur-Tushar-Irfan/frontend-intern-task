@@ -1,17 +1,26 @@
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import login from '../../assets/login.webp'
 import { AuthContext } from '../Context/UserContext';
+import useToken from '../hooks/useToken';
 
 
 
 const Register = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
     const { createUser } = useContext(AuthContext)
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [createdUserEmail,setCreatedUserEmail]=useState('')
+    const [token]=useToken(createdUserEmail)
     const [registerError, setRegisterError] = useState('')
+    if(token){
+        navigate('/attendence')
+    }
     const handleRegister = (data) => {
+
 
         createUser(data.email, data.password)
             .then(result => {
@@ -38,10 +47,11 @@ const Register = () => {
         })
         .then(res=>res.json())
         .then(data=>{
-            console.log(data)
+            setCreatedUserEmail(email)
         })
         .catch(err=>console.log(err))
     }
+   
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row">
@@ -101,7 +111,7 @@ const Register = () => {
                             </label>
                         </div>
                         <div className="form-control mt-6">
-                            <input className='btn bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-full' value='Register' type="submit" />
+                            <input className='btn bg-sky-500 w-full' value='Register' type="submit" />
                         </div>
                     </div>
                 </form>
