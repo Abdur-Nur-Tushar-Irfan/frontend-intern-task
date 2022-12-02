@@ -13,11 +13,12 @@ const Register = () => {
     const [registerError, setRegisterError] = useState('')
     const handleRegister = (data) => {
 
-        createUser(data.email,data.password)
+        createUser(data.email, data.password)
             .then(result => {
                 const user = result.user
                 console.log(user)
                 toast.success('successfully register')
+                saveUsers(data.firstName,data.lastName,data.number,data.email,data.password)
             })
             .catch(error => {
                 console.error(error)
@@ -25,12 +26,30 @@ const Register = () => {
             })
 
     }
+    
+    const saveUsers=(firstName,lastName,number,email,password)=>{
+        const users={firstName,lastName,number,email,password}
+        fetch('http://localhost:5000/users',{
+            method:'POST',
+            headers:{
+                'content-type':'application/json'
+            },
+            body:JSON.stringify(users)
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data)
+        })
+        .catch(err=>console.log(err))
+    }
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row">
                 <img alt='' className='lg:w-1/2' src={login} />
                 <form onSubmit={handleSubmit(handleRegister)} className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+
                     <div className="card-body">
+                        <h1 className="text-3xl font-bold text-center">Register!</h1>
                         <img className=' h-15 w-1/2 rounded-full mx-auto' alt='' />
                         <div className="form-control">
                             <label className="label">
@@ -64,16 +83,18 @@ const Register = () => {
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input type="password" {...register("password", 
-                            { required: 'Password is required', 
-                              minLength: { value: 8, message: 'Password must be 8 character' } })} 
-                              placeholder="password" className="input input-bordered" />
+                            <input type="password" {...register("password",
+                                {
+                                    required: 'Password is required',
+                                    minLength: { value: 8, message: 'Password must be 8 character' }
+                                })}
+                                placeholder="password" className="input input-bordered" />
                             <label className="label">
-                            
+
 
                             </label>
 
-                            {errors.password  && <p className='text-red-600 mt-2'>{errors.password?.message}</p>}
+                            {errors.password && <p className='text-red-600 mt-2'>{errors.password?.message}</p>}
                             <p className='text-red-600'>{registerError}</p>
                             <label className="label">
                                 <p>Already Login? <Link to='/login' className='text-cyan-700 font-bold'>Log in</Link></p>
